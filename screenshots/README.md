@@ -1,3 +1,3 @@
 # Demo view
 
-The running Streamlit dashboard is available at `http://localhost:8501` in the local development session. It displays the live dataset counts, qualified records, public email coverage, and skipped outreach total. The app is also the working demo deliverable; no real email or DM is sent.
+The assignment's working demo is deployed at [creatorreach-nishant.streamlit.app](https://creatorreach-nishant.streamlit.app/). It displays the 102-profile dataset and includes filtering, message review, safe send simulation, and tracker pages. The app is the demo deliverable; no real email or DM is sent. No static screenshot file is included.
