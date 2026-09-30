@@ -46,7 +46,13 @@ def write_shortlist(rows: list[dict]) -> list[dict]:
 
 
 def discover_and_prepare(target: int = 50) -> list[dict]:
-    rows=discover_candidates(target)
+    """Discover new profiles and merge them into the saved dataset by URL."""
+    existing = read_records() if (DATA/"influencers.csv").exists() else []
+    merged = {r.get("profile_url") or r.get("name", ""): r for r in existing}
+    for row in discover_candidates(target):
+        key = row.get("profile_url") or row.get("name", "")
+        merged[key] = row
+    rows=list(merged.values())
     rows=personalize_records(filter_records(rows))
     save_records(rows); write_shortlist(rows)
     return rows

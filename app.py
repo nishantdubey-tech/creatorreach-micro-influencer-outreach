@@ -66,13 +66,15 @@ def show() -> None:
 
     elif page=='Discover & Enrich':
         st.subheader('Discover public creator profiles')
-        target=st.number_input('Unique profiles to fetch',min_value=50,max_value=200,step=10,value=50)
-        st.info('Uses the YouTube Data API v3. The run collects public profile statistics, recent videos, public description emails, and content themes. Data is refreshed when you click the button.')
+        target=st.number_input('New profiles to search for',min_value=50,max_value=200,step=10,value=50)
+        st.info('Uses the YouTube Data API v3 to fetch public profile statistics, recent videos, description emails, and content themes. New results are added to the existing dataset; a repeated profile refreshes its existing row.')
         if st.button('Discover and enrich profiles',type='primary'):
             try:
+                prior_urls=set(df['profile_url'].astype(str)) if not df.empty and 'profile_url' in df else set()
                 with st.spinner('Searching channels and loading recent public metrics…'):
                     result=discover_and_prepare(int(target))
-                st.success(f"Saved {len(result)} profiles; {sum(r['filter_status']=='Passed' for r in result)} qualified.")
+                added=max(0,len(result)-len(prior_urls))
+                st.success(f"Dataset now contains {len(result)} unique profiles ({added} new); {sum(r['filter_status']=='Passed' for r in result)} qualified.")
                 st.rerun()
             except Exception as exc: st.error(str(exc))
         st.caption('YouTube subscriber counts are public profile metrics. Engagement is an average recent-video likes+comments divided by subscribers; unavailable values are flagged.')

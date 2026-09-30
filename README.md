@@ -24,13 +24,13 @@ The submission does not include fabricated influencer rows. See [`data/run_summa
 
 ## Discovery methodology
 
-The live discovery step searches six India-focused fitness phrases, interleaves results to avoid one query dominating the sample, deduplicates channel IDs, and requests the channel statistics plus up to ten recent uploads. The current snapshot has 50 unique public channels. A future run may return a different set as YouTube search rankings and metrics change.
+The live discovery step searches six India-focused fitness phrases, interleaves results to avoid one query dominating the sample, deduplicates channel IDs within each run, and requests channel statistics plus up to ten recent uploads. New results merge into the saved dataset by profile URL; repeated profiles refresh in place. A future run may return a different set as YouTube search rankings and metrics change.
 
 ## Filtering and classification logic
 
 All discovered profiles receive a transparent `Passed` or `Failed` status and a reason. A profile passes when it has at least two recent video titles with clear fitness signals, is not an obvious YouTube Topic or organization/institution channel, has 5,000-100,000 subscribers inclusive, has public engagement metrics, and does not report a channel country outside India. Missing engagement fails qualification instead of receiving an invented value.
 
-Engagement rate is an observable proxy: average `(likes + comments)` per recent video divided by subscribers, expressed as a percentage. It is not reach-based engagement. The current run has 50 records, 5 qualified creators, and 45 failures with reasons.
+Engagement rate is an observable proxy: average `(likes + comments)` per recent video divided by subscribers, expressed as a percentage. It is not reach-based engagement. The expanded snapshot has 102 unique records, 12 qualified creators, and 90 failures with reasons.
 
 ## Profile enrichment
 
@@ -50,11 +50,11 @@ The dashboard and CLI use a SQLite uniqueness constraint on profile URL to preve
 
 ## Limitations
 
-- A Google Cloud project with YouTube Data API v3 enabled and a valid API key is required for a fresh discovery run. Search results are not guaranteed to contain 50 qualified creators.
+- A Google Cloud project with YouTube Data API v3 enabled and a valid API key is required for a fresh discovery run. Search results are not guaranteed to contain 50 qualified creators per search run.
 - Public metrics can be rounded, disabled, or incomplete; comments/likes and subscriber counts do not capture reach, stories, or audience quality.
 - Search region and channel country do not prove where an audience lives.
 - No creator-provided demographics or private analytics are available.
-- Only email addresses visible in channel descriptions are extracted. The run found no public emails among the qualified creators, so the tracker logs five skips and sends zero messages.
+- Only email addresses visible in channel descriptions are extracted. The expanded snapshot found one public email among 12 qualified creators; the other 11 are `Not Found`. The included tracker records the original five skips; no new outreach was sent during dataset expansion.
 - The OpenAI pathway requires a separate OpenAI API key and can incur usage charges. The submitted messages were produced by the local fallback.
 - Before production scale, add consent/suppression tracking, retries/backoff, campaign review, privacy retention controls, and lawful delivery integrations.
 
